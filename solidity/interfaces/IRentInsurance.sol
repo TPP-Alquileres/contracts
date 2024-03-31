@@ -14,6 +14,7 @@ interface IRentInsurance {
     address tenant;
     uint256 amount;
     uint256 duration;
+    bool accepted;
   }
 
   /*///////////////////////////////////////////////////////////////
@@ -23,6 +24,10 @@ interface IRentInsurance {
   event InsuranceInitialized(
     bytes32 indexed insuranceId, address indexed owner, address indexed tenant, uint256 amount, uint256 duration
   );
+
+  event InsuranceCanceled(bytes32 indexed insuranceId);
+
+  event InsuranceAccepted(bytes32 indexed insuranceId);
 
   /*///////////////////////////////////////////////////////////////
                             ERRORS
@@ -36,13 +41,28 @@ interface IRentInsurance {
 
   error InsuranceAlreadyExists();
 
+  error InsuranceDoesNotExist();
+
+  error NotOwner();
+
+  error NotTenant();
+
   /*///////////////////////////////////////////////////////////////
                             VARIABLES
   //////////////////////////////////////////////////////////////*/
+
+  function insurances(bytes32 insuranceId)
+    external
+    view
+    returns (address owner, address tenant, uint256 amount, uint256 duration, bool accepted);
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
   //////////////////////////////////////////////////////////////*/
 
-  function initializeInsurance(address _owner, address _tenant, uint256 _amount, uint256 _duration) external;
+  function initializeInsurance(address _tenant, uint256 _amount, uint256 _duration) external;
+
+  function cancelInsurance(bytes32 _insuranceId) external;
+
+  function acceptInsurance(bytes32 _insuranceId) external;
 }
