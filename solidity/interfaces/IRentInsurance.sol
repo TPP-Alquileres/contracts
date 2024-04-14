@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.19;
 
+import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
+
 /**
  * @title Rent Insurance Contract
  */
@@ -14,20 +16,23 @@ interface IRentInsurance {
     address tenant;
     uint256 amount;
     uint256 duration;
+    uint256 startDate;
     bool accepted;
+    bool canceled;
+    bool finished;
   }
 
   /*///////////////////////////////////////////////////////////////
                             EVENTS
   //////////////////////////////////////////////////////////////*/
 
-  event InsuranceInitialized(
-    bytes32 indexed insuranceId, address indexed owner, address indexed tenant, uint256 amount, uint256 duration
-  );
+  event InsuranceInitialized(uint256 indexed insuranceId, address indexed owner, uint256 amount, uint256 duration);
 
-  event InsuranceCanceled(bytes32 indexed insuranceId);
+  event InsuranceCanceled(uint256 indexed insuranceId);
 
-  event InsuranceAccepted(bytes32 indexed insuranceId);
+  event InsuranceAccepted(uint256 indexed insuranceId);
+
+  event InsuranceFinished(uint256 indexed insuranceId);
 
   /*///////////////////////////////////////////////////////////////
                             ERRORS
@@ -43,6 +48,16 @@ interface IRentInsurance {
 
   error InsuranceDoesNotExist();
 
+  error InsuranceNotAccepted();
+
+  error InsuranceAlreadyAccepted();
+
+  error InsuranceAlreadyCanceled();
+
+  error InsuranceAlreadyFinished();
+
+  error InsuranceNotFinished();
+
   error NotOwner();
 
   error NotTenant();
@@ -51,18 +66,33 @@ interface IRentInsurance {
                             VARIABLES
   //////////////////////////////////////////////////////////////*/
 
-  function insurances(bytes32 insuranceId)
+  function insurances(uint256 insuranceId)
     external
     view
-    returns (address owner, address tenant, uint256 amount, uint256 duration, bool accepted);
+    returns (
+      address owner,
+      address tenant,
+      uint256 amount,
+      uint256 duration,
+      uint256 startDate,
+      bool accepted,
+      bool canceled,
+      bool finished
+    );
+
+  function insuranceCounter() external view returns (uint256);
+
+  function insurancePool() external view returns (IInsurancePool);
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
   //////////////////////////////////////////////////////////////*/
 
-  function initializeInsurance(address _tenant, uint256 _amount, uint256 _duration) external;
+  function initializeInsurance(uint256 _amount, uint256 _duration) external;
 
-  function cancelInsurance(bytes32 _insuranceId) external;
+  function cancelInsurance(uint256 _insuranceId) external;
 
-  function acceptInsurance(bytes32 _insuranceId) external;
+  function acceptInsurance(uint256 _insuranceId) external;
+
+  function finishInsurance(uint256 _insuranceId) external;
 }
