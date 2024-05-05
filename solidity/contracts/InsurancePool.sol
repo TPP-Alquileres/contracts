@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity =0.8.19;
+pragma solidity =0.8.20;
 
 import {Ownable} from 'oz/access/Ownable.sol';
 import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
@@ -10,7 +10,11 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
 
   mapping(uint256 insuranceId => uint256 locked) public amountLocked;
 
-  constructor(IERC20 _token, string memory _name, string memory _symbol) ERC4626(_token) ERC20(_name, _symbol) {}
+  constructor(
+    IERC20 _token,
+    string memory _name,
+    string memory _symbol
+  ) ERC4626(_token) ERC20(_name, _symbol) Ownable(msg.sender) {}
 
   function _withdraw(
     address caller,

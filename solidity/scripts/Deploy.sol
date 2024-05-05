@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity =0.8.19;
+pragma solidity =0.8.20;
 
 import {Script} from 'forge-std/Script.sol';
 import {RentInsurance} from 'contracts/RentInsurance.sol';
@@ -11,7 +11,7 @@ abstract contract Deploy is Script {
     vm.startBroadcast();
 
     IERC20 token = new MyToken();
-    new RentInsurance(token);
+    new RentInsurance(token, msg.sender);
 
     vm.stopBroadcast();
   }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity =0.8.19;
+pragma solidity =0.8.20;
 
 import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
 
@@ -15,6 +15,7 @@ interface IRentInsurance {
     address owner;
     address tenant;
     uint256 amount;
+    uint256 payment;
     uint256 duration;
     uint256 startDate;
     bool accepted;
@@ -62,6 +63,8 @@ interface IRentInsurance {
 
   error NotTenant();
 
+  error InvalidSigner();
+
   /*///////////////////////////////////////////////////////////////
                             VARIABLES
   //////////////////////////////////////////////////////////////*/
@@ -73,6 +76,7 @@ interface IRentInsurance {
       address owner,
       address tenant,
       uint256 amount,
+      uint256 payment,
       uint256 duration,
       uint256 startDate,
       bool accepted,
@@ -82,7 +86,7 @@ interface IRentInsurance {
 
   function insuranceCounter() external view returns (uint256);
 
-  function insurancePool() external view returns (IInsurancePool);
+  function INSURANCE_POOL() external view returns (IInsurancePool);
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
@@ -92,7 +96,7 @@ interface IRentInsurance {
 
   function cancelInsurance(uint256 _insuranceId) external;
 
-  function acceptInsurance(uint256 _insuranceId) external;
+  function acceptInsurance(uint256 _insuranceId, uint256 _payment, bytes calldata signature) external;
 
   function finishInsurance(uint256 _insuranceId) external;
 }
