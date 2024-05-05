@@ -28,3 +28,9 @@ contract DeployGoerli is Deploy {
     _deploy();
   }
 }
+
+contract DeploySepolia is Deploy {
+  function run() external {
+    _deploy();
+  }
+}

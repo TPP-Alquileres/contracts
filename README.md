@@ -97,6 +97,12 @@ Configure the `.env` variables.
 yarn deploy:goerli
 ```
 
+### Sepolia
+
+```bash
+yarn deploy:sepolia
+```
+
 ### Mainnet
 
 ```bash
