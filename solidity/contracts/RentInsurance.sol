@@ -63,7 +63,7 @@ contract RentInsurance is IRentInsurance, Ownable {
 
   function acceptInsurance(uint256 _insuranceId, uint256 _payment, bytes calldata signature) external override {
     // Verify the signature
-    bytes32 _messageHash = keccak256(abi.encodePacked(msg.sender, _insuranceId, _payment));
+    bytes32 _messageHash = keccak256(bytes.concat(keccak256(abi.encode(msg.sender, _insuranceId, _payment))));
     bytes32 _ethSignedMessageHash = _messageHash.toEthSignedMessageHash();
     address _recoveredSigner = _ethSignedMessageHash.recover(signature);
     if (_recoveredSigner != signer) revert InvalidSigner();
@@ -94,7 +94,6 @@ contract RentInsurance is IRentInsurance, Ownable {
     InsuranceData storage _insurance = insurances[_insuranceId];
 
     if (_insurance.owner == address(0)) revert InsuranceDoesNotExist();
-    if (_insurance.owner != msg.sender) revert NotOwner();
     if (!_insurance.accepted) revert InsuranceNotAccepted();
     if (_insurance.canceled) revert InsuranceAlreadyCanceled();
     if (_insurance.finished) revert InsuranceAlreadyFinished();
