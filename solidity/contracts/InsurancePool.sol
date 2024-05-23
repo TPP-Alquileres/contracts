@@ -13,8 +13,9 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
   constructor(
     IERC20 _token,
     string memory _name,
-    string memory _symbol
-  ) ERC4626(_token) ERC20(_name, _symbol) Ownable(msg.sender) {}
+    string memory _symbol,
+    address _owner
+  ) ERC4626(_token) ERC20(_name, _symbol) Ownable(_owner) {}
 
   function _withdraw(
     address caller,

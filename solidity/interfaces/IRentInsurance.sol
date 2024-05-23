@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.20;
 
-import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
-
 /**
  * @title Rent Insurance Contract
  */
@@ -16,6 +14,7 @@ interface IRentInsurance {
     address tenant;
     uint256 amount;
     uint256 payment;
+    address pool;
     uint256 duration;
     uint256 startDate;
     bool accepted;
@@ -77,6 +76,7 @@ interface IRentInsurance {
       address tenant,
       uint256 amount,
       uint256 payment,
+      address pool,
       uint256 duration,
       uint256 startDate,
       bool accepted,
@@ -86,7 +86,7 @@ interface IRentInsurance {
 
   function insuranceCounter() external view returns (uint256);
 
-  function INSURANCE_POOL() external view returns (IInsurancePool);
+  function SIGNER() external view returns (address);
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
@@ -96,7 +96,7 @@ interface IRentInsurance {
 
   function cancelInsurance(uint256 _insuranceId) external;
 
-  function acceptInsurance(uint256 _insuranceId, uint256 _payment, bytes calldata signature) external;
+  function acceptInsurance(uint256 _insuranceId, uint256 _payment, address _pool, bytes calldata signature) external;
 
   function finishInsurance(uint256 _insuranceId) external;
 }
