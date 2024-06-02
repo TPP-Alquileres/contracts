@@ -109,4 +109,21 @@ contract RentInsurance is IRentInsurance, Ownable {
 
     emit InsuranceFinished(_insuranceId);
   }
+
+  function executeInsurance(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
+    InsuranceData storage _insurance = insurances[_insuranceId];
+
+    if (_insurance.owner == address(0)) revert InsuranceDoesNotExist();
+    if (!_insurance.accepted) revert InsuranceNotAccepted();
+    if (_insurance.canceled) revert InsuranceAlreadyCanceled();
+    if (_insurance.finished) revert InsuranceAlreadyFinished();
+
+    _insurance.amount -= _amount;
+
+    IInsurancePool(_insurance.pool).execute(_insuranceId, _amount);
+
+    IERC20(IInsurancePool(_insurance.pool).asset()).transfer(_insurance.owner, _amount);
+
+    emit InsuranceExecuted(_insuranceId, _amount);
+  }
 }

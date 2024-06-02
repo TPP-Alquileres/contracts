@@ -34,6 +34,8 @@ interface IRentInsurance {
 
   event InsuranceFinished(uint256 indexed insuranceId);
 
+  event InsuranceExecuted(uint256 indexed insuranceId, uint256 amount);
+
   /*///////////////////////////////////////////////////////////////
                             ERRORS
   //////////////////////////////////////////////////////////////*/
@@ -99,4 +101,6 @@ interface IRentInsurance {
   function acceptInsurance(uint256 _insuranceId, uint256 _payment, address _pool, bytes calldata signature) external;
 
   function finishInsurance(uint256 _insuranceId) external;
+
+  function executeInsurance(uint256 _insuranceId, uint256 _amount) external;
 }

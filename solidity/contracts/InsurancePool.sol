@@ -52,4 +52,18 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
 
     emit Unlocked(_insuranceId, _amount);
   }
+
+  function execute(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
+    uint256 _locked = amountLocked[_insuranceId];
+
+    if (_locked == 0) revert InsuranceNotLocked();
+    if (_locked < _amount) revert InsufficientFunds();
+
+    amountLocked[_insuranceId] -= _amount;
+    totalLocked -= _amount;
+
+    IERC20(asset()).transfer(owner(), _amount);
+
+    emit Executed(_insuranceId, _amount);
+  }
 }

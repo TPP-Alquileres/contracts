@@ -15,6 +15,8 @@ interface IInsurancePool is IERC4626 {
 
   event Unlocked(uint256 indexed insuranceId, uint256 amount);
 
+  event Executed(uint256 indexed insuranceId, uint256 amount);
+
   /*///////////////////////////////////////////////////////////////
                             ERRORS
   //////////////////////////////////////////////////////////////*/
@@ -40,4 +42,6 @@ interface IInsurancePool is IERC4626 {
   function lock(uint256 insuranceId, uint256 amount) external;
 
   function unlock(uint256 insuranceId) external;
+
+  function execute(uint256 insuranceId, uint256 amount) external;
 }
