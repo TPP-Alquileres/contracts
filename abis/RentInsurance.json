@@ -1,0 +1,272 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      { "name": "_signer", "type": "address", "internalType": "address" }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "SIGNER",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "acceptInsurance",
+    "inputs": [
+      {
+        "name": "_insuranceId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      { "name": "_payment", "type": "uint256", "internalType": "uint256" },
+      { "name": "_pool", "type": "address", "internalType": "address" },
+      { "name": "signature", "type": "bytes", "internalType": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "cancelInsurance",
+    "inputs": [
+      { "name": "_insuranceId", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "executeInsurance",
+    "inputs": [
+      {
+        "name": "_insuranceId",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "finishInsurance",
+    "inputs": [
+      { "name": "_insuranceId", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "initializeInsurance",
+    "inputs": [
+      { "name": "_amount", "type": "uint256", "internalType": "uint256" },
+      { "name": "_duration", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "insuranceCounter",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "insurances",
+    "inputs": [
+      { "name": "insuranceId", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [
+      { "name": "owner", "type": "address", "internalType": "address" },
+      { "name": "tenant", "type": "address", "internalType": "address" },
+      { "name": "amount", "type": "uint256", "internalType": "uint256" },
+      { "name": "payment", "type": "uint256", "internalType": "uint256" },
+      { "name": "pool", "type": "address", "internalType": "address" },
+      { "name": "duration", "type": "uint256", "internalType": "uint256" },
+      { "name": "startDate", "type": "uint256", "internalType": "uint256" },
+      { "name": "accepted", "type": "bool", "internalType": "bool" },
+      { "name": "canceled", "type": "bool", "internalType": "bool" },
+      { "name": "finished", "type": "bool", "internalType": "bool" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "inputs": [
+      { "name": "newOwner", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "InsuranceAccepted",
+    "inputs": [
+      {
+        "name": "insuranceId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InsuranceCanceled",
+    "inputs": [
+      {
+        "name": "insuranceId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InsuranceExecuted",
+    "inputs": [
+      {
+        "name": "insuranceId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InsuranceFinished",
+    "inputs": [
+      {
+        "name": "insuranceId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "InsuranceInitialized",
+    "inputs": [
+      {
+        "name": "insuranceId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "owner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "duration",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      {
+        "name": "previousOwner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "newOwner",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  { "type": "error", "name": "ECDSAInvalidSignature", "inputs": [] },
+  {
+    "type": "error",
+    "name": "ECDSAInvalidSignatureLength",
+    "inputs": [
+      { "name": "length", "type": "uint256", "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "ECDSAInvalidSignatureS",
+    "inputs": [{ "name": "s", "type": "bytes32", "internalType": "bytes32" }]
+  },
+  { "type": "error", "name": "InsuranceAlreadyAccepted", "inputs": [] },
+  { "type": "error", "name": "InsuranceAlreadyCanceled", "inputs": [] },
+  { "type": "error", "name": "InsuranceAlreadyExists", "inputs": [] },
+  { "type": "error", "name": "InsuranceAlreadyFinished", "inputs": [] },
+  { "type": "error", "name": "InsuranceDoesNotExist", "inputs": [] },
+  { "type": "error", "name": "InsuranceNotAccepted", "inputs": [] },
+  { "type": "error", "name": "InsuranceNotFinished", "inputs": [] },
+  { "type": "error", "name": "InvalidAddress", "inputs": [] },
+  { "type": "error", "name": "InvalidAmount", "inputs": [] },
+  { "type": "error", "name": "InvalidDuration", "inputs": [] },
+  { "type": "error", "name": "InvalidSigner", "inputs": [] },
+  { "type": "error", "name": "NotOwner", "inputs": [] },
+  { "type": "error", "name": "NotTenant", "inputs": [] },
+  {
+    "type": "error",
+    "name": "OwnableInvalidOwner",
+    "inputs": [
+      { "name": "owner", "type": "address", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "OwnableUnauthorizedAccount",
+    "inputs": [
+      { "name": "account", "type": "address", "internalType": "address" }
+    ]
+  }
+]
