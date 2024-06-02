@@ -12,16 +12,20 @@ contract RentInsurance is IRentInsurance, Ownable {
   using ECDSA for bytes32;
   using MessageHashUtils for bytes32;
 
-  address public immutable SIGNER;
+  /// @inheritdoc IRentInsurance
+  address public immutable override SIGNER;
 
-  mapping(uint256 insuranceId => InsuranceData data) public insurances;
+  /// @inheritdoc IRentInsurance
+  mapping(uint256 insuranceId => InsuranceData data) public override insurances;
 
-  uint256 public insuranceCounter;
+  /// @inheritdoc IRentInsurance
+  uint256 public override insuranceCounter;
 
   constructor(address _signer) Ownable(msg.sender) {
     SIGNER = _signer;
   }
 
+  /// @inheritdoc IRentInsurance
   function initializeInsurance(uint256 _amount, uint256 _duration) external override {
     if (_amount == 0) revert InvalidAmount();
     if (_duration == 0) revert InvalidDuration();
@@ -46,6 +50,7 @@ contract RentInsurance is IRentInsurance, Ownable {
     emit InsuranceInitialized(_insuranceId, msg.sender, _amount, _duration);
   }
 
+  /// @inheritdoc IRentInsurance
   function cancelInsurance(uint256 _insuranceId) external override {
     InsuranceData storage _insurance = insurances[_insuranceId];
 
@@ -59,6 +64,7 @@ contract RentInsurance is IRentInsurance, Ownable {
     emit InsuranceCanceled(_insuranceId);
   }
 
+  /// @inheritdoc IRentInsurance
   function acceptInsurance(
     uint256 _insuranceId,
     uint256 _payment,
@@ -94,6 +100,7 @@ contract RentInsurance is IRentInsurance, Ownable {
     emit InsuranceAccepted(_insuranceId);
   }
 
+  /// @inheritdoc IRentInsurance
   function finishInsurance(uint256 _insuranceId) external override onlyOwner {
     InsuranceData storage _insurance = insurances[_insuranceId];
 
@@ -110,6 +117,7 @@ contract RentInsurance is IRentInsurance, Ownable {
     emit InsuranceFinished(_insuranceId);
   }
 
+  /// @inheritdoc IRentInsurance
   function executeInsurance(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
     InsuranceData storage _insurance = insurances[_insuranceId];
 

@@ -11,9 +11,16 @@ abstract contract Deploy is Script {
   function _deploy() internal {
     vm.startBroadcast();
 
+    // Deploy mock ERC20 token
     IERC20 token = new MyToken();
+
+    // Deploy Rent Insurance contract
     RentInsurance _insurance = new RentInsurance(msg.sender);
-    new InsurancePool(token, 'Rent Insurance Pool', 'RIP', address(_insurance));
+
+    // Deploy insurance pools contracts
+    new InsurancePool(token, 'Rent Insurance Pool (Low risk)', 'RIP-LR', address(_insurance));
+    new InsurancePool(token, 'Rent Insurance Pool (Medium risk)', 'RIP-MR', address(_insurance));
+    new InsurancePool(token, 'Rent Insurance Pool (High risk)', 'RIP-HR', address(_insurance));
 
     vm.stopBroadcast();
   }

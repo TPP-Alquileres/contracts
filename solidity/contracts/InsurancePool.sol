@@ -6,9 +6,11 @@ import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
 import {ERC4626, IERC20, ERC20} from 'oz/token/ERC20/extensions/ERC4626.sol';
 
 contract InsurancePool is IInsurancePool, ERC4626, Ownable {
-  uint256 public totalLocked;
+  /// @inheritdoc IInsurancePool
+  uint256 public override totalLocked;
 
-  mapping(uint256 insuranceId => uint256 locked) public amountLocked;
+  /// @inheritdoc IInsurancePool
+  mapping(uint256 insuranceId => uint256 locked) public override amountLocked;
 
   constructor(
     IERC20 _token,
@@ -17,19 +19,7 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
     address _owner
   ) ERC4626(_token) ERC20(_name, _symbol) Ownable(_owner) {}
 
-  function _withdraw(
-    address caller,
-    address receiver,
-    address _owner,
-    uint256 assets,
-    uint256 shares
-  ) internal override {
-    uint256 _available = totalAssets() - totalLocked;
-    if (_available < assets) revert InsufficientFunds();
-
-    super._withdraw(caller, receiver, _owner, assets, shares);
-  }
-
+  /// @inheritdoc IInsurancePool
   function lock(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
     if (amountLocked[_insuranceId] > 0) revert InsuranceAlreadyLocked();
 
@@ -42,6 +32,7 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
     emit Locked(_insuranceId, _amount);
   }
 
+  /// @inheritdoc IInsurancePool
   function unlock(uint256 _insuranceId) external override onlyOwner {
     uint256 _amount = amountLocked[_insuranceId];
 
@@ -53,6 +44,7 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
     emit Unlocked(_insuranceId, _amount);
   }
 
+  /// @inheritdoc IInsurancePool
   function execute(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
     uint256 _locked = amountLocked[_insuranceId];
 
@@ -65,5 +57,19 @@ contract InsurancePool is IInsurancePool, ERC4626, Ownable {
     IERC20(asset()).transfer(owner(), _amount);
 
     emit Executed(_insuranceId, _amount);
+  }
+
+  /// @dev Overrides the `_withdraw` function from `ERC4626` to check if the pool has enough funds
+  function _withdraw(
+    address caller,
+    address receiver,
+    address _owner,
+    uint256 assets,
+    uint256 shares
+  ) internal override {
+    uint256 _available = totalAssets() - totalLocked;
+    if (_available < assets) revert InsufficientFunds();
+
+    super._withdraw(caller, receiver, _owner, assets, shares);
   }
 }
