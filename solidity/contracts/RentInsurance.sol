@@ -3,7 +3,8 @@ pragma solidity =0.8.20;
 
 import {Ownable} from 'oz/access/Ownable.sol';
 import {IRentInsurance} from 'interfaces/IRentInsurance.sol';
-import {InsurancePool, IInsurancePool} from 'contracts/InsurancePool.sol';
+import {IInsurancePool} from 'interfaces/IInsurancePool.sol';
+import {IRent} from 'interfaces/IRent.sol';
 import {IERC20} from 'oz/token/ERC20/IERC20.sol';
 import {ECDSA} from 'oz/utils/cryptography/ECDSA.sol';
 import {MessageHashUtils} from 'oz/utils/cryptography/MessageHashUtils.sol';
@@ -16,13 +17,17 @@ contract RentInsurance is IRentInsurance, Ownable {
   address public immutable override SIGNER;
 
   /// @inheritdoc IRentInsurance
+  address public immutable override RENT;
+
+  /// @inheritdoc IRentInsurance
   mapping(uint256 insuranceId => InsuranceData data) public override insurances;
 
   /// @inheritdoc IRentInsurance
   uint256 public override insuranceCounter;
 
-  constructor(address _signer) Ownable(msg.sender) {
+  constructor(address _signer, address _rent) Ownable(msg.sender) {
     SIGNER = _signer;
+    RENT = _rent;
   }
 
   /// @inheritdoc IRentInsurance
@@ -92,7 +97,10 @@ contract RentInsurance is IRentInsurance, Ownable {
     _insurance.pool = _pool;
 
     // Lock the insurance amount in the pool
-    IInsurancePool(_pool).lock(_insuranceId, _insurance.amount);
+    IInsurancePool(_pool).lock(_insuranceId, _payment);
+
+    // Initialize the rent
+    IRent(RENT).initializeRent(_insuranceId);
 
     // Transfer the payment to the pool
     IERC20(IInsurancePool(_pool).asset()).transferFrom(msg.sender, _pool, _payment);
@@ -118,19 +126,25 @@ contract RentInsurance is IRentInsurance, Ownable {
   }
 
   /// @inheritdoc IRentInsurance
-  function executeInsurance(uint256 _insuranceId, uint256 _amount) external override onlyOwner {
+  function executeInsurance(uint256 _insuranceId, uint256 _amount) external override {
     InsuranceData storage _insurance = insurances[_insuranceId];
 
+    if (msg.sender != owner() && msg.sender != RENT) revert NotOwner();
     if (_insurance.owner == address(0)) revert InsuranceDoesNotExist();
     if (!_insurance.accepted) revert InsuranceNotAccepted();
     if (_insurance.canceled) revert InsuranceAlreadyCanceled();
     if (_insurance.finished) revert InsuranceAlreadyFinished();
 
-    _insurance.amount -= _amount;
+    IInsurancePool _pool = IInsurancePool(_insurance.pool);
 
-    IInsurancePool(_insurance.pool).execute(_insuranceId, _amount);
+    _pool.execute(_insuranceId, _amount);
 
-    IERC20(IInsurancePool(_insurance.pool).asset()).transfer(_insurance.owner, _amount);
+    if (_pool.amountLocked(_insuranceId) == 0) {
+      _insurance.finished = true;
+      emit InsuranceFinished(_insuranceId);
+    }
+
+    IERC20(_pool.asset()).transfer(_insurance.owner, _amount);
 
     emit InsuranceExecuted(_insuranceId, _amount);
   }

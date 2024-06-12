@@ -146,6 +146,9 @@ interface IRentInsurance {
                             VARIABLES
   //////////////////////////////////////////////////////////////*/
 
+  /**
+   * @notice The insurances
+   */
   function insurances(uint256 insuranceId)
     external
     view
@@ -173,6 +176,12 @@ interface IRentInsurance {
    * @return The signer address
    */
   function SIGNER() external view returns (address);
+
+  /**
+   * @notice The rent contract address
+   * @return The rent contract address
+   */
+  function RENT() external view returns (address);
 
   /*///////////////////////////////////////////////////////////////
                             LOGIC
