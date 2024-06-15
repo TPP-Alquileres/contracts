@@ -2,9 +2,17 @@
   {
     "type": "constructor",
     "inputs": [
-      { "name": "_signer", "type": "address", "internalType": "address" }
+      { "name": "_signer", "type": "address", "internalType": "address" },
+      { "name": "_rent", "type": "address", "internalType": "address" }
     ],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "RENT",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
   },
   {
     "type": "function",
